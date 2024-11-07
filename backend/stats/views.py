@@ -62,3 +62,29 @@ def TeamApi(request,id=0):
     team=Team.objects.get(TeamId=id)
     team.delete()
     return JsonResponse("Deleted team successfully",safe=False)
+
+@csrf_exempt
+def PlayerApi(request,id=0):
+  if request.method=='GET':
+    player = Player.objects.all()
+    player_serializer=PlayerSerializer(player,many=True)
+    return JsonResponse(player_serializer.data, safe=False)
+  elif request.method=='POST':
+    player_data=JSONParser().parse(request)
+    player_serializer=PlayerSerializer(data=player_data)
+    if player_serializer.is_valid():
+      player_serializer.save()
+      return JsonResponse("Added Player successfully",safe=False)
+    return JsonResponse("Failed to add player",safe=False)
+  elif request.method=='PUT':
+    player_data=JSONParser().parse(request)
+    player=Player.objects.get(PlayerId=player_data['PlayerId'])
+    player_serializer=PlayerSerializer(player,data=player_data)
+    if player_serializer.is_valid():
+      player_serializer.save()
+      return JsonResponse("Update Successful", safe=False)
+    return JsonResponse("Failed to update player", safe=False)
+  elif request.method=='DELETE':
+    player=Player.objects.get(PlayerId=id)
+    player.delete()
+    return JsonResponse("Deleted player successfully",safe=False)

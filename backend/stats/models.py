@@ -21,7 +21,7 @@ class Position(models.Model):
 class Player(models.Model):
   PlayerId = models.AutoField(primary_key=True)
   PlayerName = models.CharField(max_length=500)
-  Team = models.CharField(max_length=500)
+  Team = models.PositiveIntegerField()
   Positions = models.ManyToManyField(Position)
 
   def __str__(self):
