@@ -1,0 +1,12 @@
+from django.urls import path
+from . import views
+
+app_name = 'stats'
+
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('leagues', views.LeagueApi, name='leagues'),
+    path('leagues/<int:id>', views.LeagueApi, name='league_detail'),
+    path('teams', views.TeamApi, name='teams'),
+    path('teams/<int:id>', views.TeamApi, name='team_detail')
+]
