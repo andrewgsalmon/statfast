@@ -20,9 +20,12 @@ class Position(models.Model):
 
 class Player(models.Model):
   PlayerId = models.AutoField(primary_key=True)
-  PlayerName = models.CharField(max_length=500)
+  FirstName = models.CharField(max_length=500)
+  LastName = models.CharField(max_length=500, default="not set")
   Team = models.PositiveIntegerField()
   Positions = models.ManyToManyField(Position)
+  Bats = models.CharField(max_length=1)
+  Throws = models.CharField(max_length=1)
 
   def __str__(self):
-      return self.PlayerName
+      return [self.LastName, self.FirstName]
