@@ -29,3 +29,24 @@ class Player(models.Model):
 
   def __str__(self):
       return [self.LastName, self.FirstName]
+
+class Pitch(models.Model):
+  PitchId = models.AutoField(primary_key=True)
+  GameId = models.PositiveIntegerField()
+  PitcherId = models.PositiveIntegerField()
+  BatterId = models.PositiveIntegerField()
+  PitchType = models.CharField(max_length=100)
+  PitchCall = models.CharField(max_length=100)
+  Swing = models.BooleanField(default=False, blank=True)
+  Contact = models.BooleanField(default=False, blank=True)
+  BallInPlay = models.BooleanField(default=False, blank=True)
+  BallInPlayType = models.CharField(max_length=100, null=True, blank=True, default=None)
+  Bases = models.PositiveIntegerField(default=None, null=True, blank=True)
+  Rbi = models.PositiveIntegerField(default=None, null=True, blank=True)
+
+class Game(models.Model):
+  GameId = models.AutoField(primary_key=True)
+  Date = models.DateField()
+  VisitingTeamId = models.PositiveIntegerField()
+  HomeTeamId = models.PositiveIntegerField()
+  LeagueId = models.PositiveIntegerField()
