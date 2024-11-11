@@ -10,5 +10,7 @@ urlpatterns = [
     path('teams', views.TeamApi, name='teams'),
     path('teams/<int:id>', views.TeamApi, name='team_detail'),
     path('players', views.PlayerApi, name='players'),
-    path('players/<int:id>', views.PlayerApi, name='player_detail')
+    path('players/<int:id>', views.PlayerApi, name='player_detail'),
+    path('pitches', views.PitchApi, name='pitches'),
+    path('games', views.GameApi, name='games')
 ]

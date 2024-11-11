@@ -4,8 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 
-from stats.models import League, Team, Player, Position
-from stats.serializers import LeagueSerializer, TeamSerializer, PlayerSerializer, PositionSerializer
+from stats.models import League, Team, Player, Position, Pitch
+from stats.serializers import LeagueSerializer, TeamSerializer, PlayerSerializer, PositionSerializer, PitchSerializer
 
 # Create your views here.
 def index(request):
@@ -96,3 +96,39 @@ def PlayerApi(request,id=0):
     player=Player.objects.get(PlayerId=id)
     player.delete()
     return JsonResponse("Deleted player successfully",safe=False)
+
+@csrf_exempt
+def PitchApi(request,id=0):
+  if request.method=='GET':
+    pitch_id = request.GET.get('pitch_id', None)
+    if pitch_id:
+      pitches = Pitch.objects.filter(PitchId=pitch_id)
+    else:
+      pitches = Pitch.objects.all()
+    pitch_serializer = PitchSerializer(pitches, many=True)
+    return JsonResponse(pitch_serializer.data, safe=False)
+  elif request.method=='POST':
+    pitch_data=JSONParser().parse(request)
+    pitch_serializer=PitchSerializer(data=pitch_data)
+    if pitch_serializer.is_valid():
+      pitch_serializer.save()
+      return JsonResponse("Added Pitch successfully",safe=False)
+    return JsonResponse("Failed to add pitch",safe=False)
+
+@csrf_exempt
+def GameApi(request,id=0):
+  if request.method=='GET':
+    game_id = request.GET.get('game_id', None)
+    if game_id:
+      games = Game.objects.filter(GameId=game_id)
+    else:
+      games = Game.objects.all()
+    game_serializer = GameSerializer(games, many=True)
+    return JsonResponse(game_serializer.data, safe=False)
+  elif request.method=='POST':
+    game_data=JSONParser().parse(request)
+    game_serializer=GameSerializer(data=game_data)
+    if game_serializer.is_valid():
+      game_serializer.save()
+      return JsonResponse("Created Game successfully",safe=False)
+    return JsonResponse("Failed to add game",safe=False)

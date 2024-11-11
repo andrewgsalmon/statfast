@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from stats.models import League, Team, Position, Player
+from stats.models import League, Team, Position, Player, Pitch, Game
 
 class LeagueSerializer(serializers.ModelSerializer):
   class Meta:
@@ -20,3 +20,13 @@ class PlayerSerializer(serializers.ModelSerializer):
   class Meta:
     model=Player
     fields=('PlayerId', 'FirstName', 'LastName', 'Team', 'Positions', 'Bats', 'Throws')
+
+class PitchSerializer(serializers.ModelSerializer):
+  class Meta:
+    model=Pitch
+    fields=('PitchId', 'GameId', 'PitcherId', 'BatterId', 'PitchType', 'PitchCall', 'Swing', 'Contact', 'BallInPlay', 'BallInPlayType', 'Bases', 'Rbi')
+
+class GameSerializer(serializers.ModelSerializer):
+  class Meta:
+    model=Game
+    fields=('GameId', 'Date', 'VisitingTeamId', 'HomeTeamId', 'LeagueId')
