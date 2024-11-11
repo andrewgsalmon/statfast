@@ -19,7 +19,7 @@ class PositionSerializer(serializers.ModelSerializer):
 class PlayerSerializer(serializers.ModelSerializer):
   class Meta:
     model=Player
-    fields=('PlayerId', 'FirstName', 'LastName', 'Team', 'Positions', 'Bats', 'Throws')
+    fields=('PlayerId', 'FirstName', 'LastName', 'Team', 'Positions', 'Bats', 'Throws', 'JerseyNumber')
 
 class PitchSerializer(serializers.ModelSerializer):
   class Meta:
