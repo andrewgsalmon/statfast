@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator
 
 # Create your models here.
 
@@ -21,7 +22,8 @@ class Position(models.Model):
 class Player(models.Model):
   PlayerId = models.AutoField(primary_key=True)
   FirstName = models.CharField(max_length=500)
-  LastName = models.CharField(max_length=500, default="not set")
+  LastName = models.CharField(max_length=500)
+  JerseyNumber = models.PositiveIntegerField(validators=[MaxValueValidator(100)])
   Team = models.PositiveIntegerField()
   Positions = models.ManyToManyField(Position)
   Bats = models.CharField(max_length=1)
