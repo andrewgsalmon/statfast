@@ -4,8 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 
-from stats.models import League, Team, Player, Position, Pitch
-from stats.serializers import LeagueSerializer, TeamSerializer, PlayerSerializer, PositionSerializer, PitchSerializer
+from stats.models import League, Team, Player, Position, Pitch, Play, Game
+from stats.serializers import LeagueSerializer, TeamSerializer, PlayerSerializer, PositionSerializer, PitchSerializer, PlaySerializer, GameSerializer
 
 # Create your views here.
 def index(request):
@@ -134,12 +134,29 @@ def GameApi(request,id=0):
     return JsonResponse("Failed to add game",safe=False)
 
 @csrf_exempt
-def PlayApi(request,id=0):
+def PlayApi(request,id=0, game_id=None):
   if request.method=='GET':
     play_id = request.GET.get('play_id', None)
     if play_id:
       plays = Play.objects.filter(PlayId=play_id)
+    elif game_id:
+      plays = Play.objects.filter(GameId=game_id)
     else:
       plays = Play.objects.all()
     play_serializer = PlaySerializer(plays, many=True)
     return JsonResponse(play_serializer.data, safe=False)
+  elif request.method=='POST':
+    play_data=JSONParser().parse(request)
+    play_serializer=PlaySerializer(data=play_data)
+    if play_serializer.is_valid():
+      play = play_serializer.save()
+      response_data = {
+        "message": "Created play successfully",
+        "playId": play.PlayId
+      }
+      return JsonResponse(response_data ,safe=False)
+    return JsonResponse("Failed to add play",safe=False)
+  elif request.method=='DELETE':
+    play=Play.objects.get(PlayId=id)
+    play.delete()
+    return JsonResponse("Deleted successfully",safe=False)

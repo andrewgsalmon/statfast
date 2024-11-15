@@ -24,7 +24,7 @@ class PlayerSerializer(serializers.ModelSerializer):
 class PitchSerializer(serializers.ModelSerializer):
   class Meta:
     model=Pitch
-    fields=('PitchId', 'GameId', 'PitcherId', 'BatterId', 'Outs', 'PitchType', 'PitchCall', 'PitchLocation', 'SwingType', 'Contact', 'PlayId', 'BallInPlayType')
+    fields=('PitchId', 'GameId', 'PitcherId', 'BatterId', 'PitchType', 'PitchCall', 'PitchLocation', 'SwingType', 'Contact', 'PlayId')
 
 class GameSerializer(serializers.ModelSerializer):
   class Meta:
@@ -34,4 +34,4 @@ class GameSerializer(serializers.ModelSerializer):
 class PlaySerializer(serializers.ModelSerializer):
   class Meta:
     model=Play
-    fields=('PlayId', 'GameId', 'BatterId', 'PitcherId', 'TotalBases', 'PlayType', 'BallInPlayType', 'OutsRecorded', 'Runs', 'EarnedRuns', 'PlayersScored', 'Errors')
+    fields=('PlayId', 'GameId', 'BatterId', 'PitcherId', 'TotalBases', 'PlayType', 'BallInPlayType', 'FielderOnHit', 'FieldingSequence', 'OutsRecorded', 'BasesAdvancedFromFirst', 'BasesAdvancedFromSecond', 'BasesAdvancedFromThird', 'Runs', 'EarnedRuns', 'PlayersScored', 'Errors')
