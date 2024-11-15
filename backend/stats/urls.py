@@ -13,5 +13,7 @@ urlpatterns = [
     path('players/<int:id>', views.PlayerApi, name='player_detail'),
     path('pitches', views.PitchApi, name='pitches'),
     path('games', views.GameApi, name='games'),
-    path('plays', views.PlayApi, name='plays')
+    path('plays', views.PlayApi, name='plays'),
+    path('plays/<int:id>', views.PlayApi, name='play_detail'),
+    path('plays/game/<int:game_id>', views.PlayApi, name='plays_by_game')
 ]
