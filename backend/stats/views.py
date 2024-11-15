@@ -132,3 +132,14 @@ def GameApi(request,id=0):
       game_serializer.save()
       return JsonResponse("Created Game successfully",safe=False)
     return JsonResponse("Failed to add game",safe=False)
+
+@csrf_exempt
+def PlayApi(request,id=0):
+  if request.method=='GET':
+    play_id = request.GET.get('play_id', None)
+    if play_id:
+      plays = Play.objects.filter(PlayId=play_id)
+    else:
+      plays = Play.objects.all()
+    play_serializer = PlaySerializer(plays, many=True)
+    return JsonResponse(play_serializer.data, safe=False)
