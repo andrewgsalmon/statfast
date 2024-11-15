@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
+from django.contrib.postgres.fields import JSONField, ArrayField
 
 # Create your models here.
 
@@ -37,14 +38,28 @@ class Pitch(models.Model):
   GameId = models.PositiveIntegerField()
   PitcherId = models.PositiveIntegerField()
   BatterId = models.PositiveIntegerField()
+  Outs = models.PositiveIntegerField()
   PitchType = models.CharField(max_length=100)
   PitchCall = models.CharField(max_length=100)
-  Swing = models.BooleanField(default=False, blank=True)
+  PitchLocation = ArrayField(base_field=models.CharField(max_length=50), size=2)
+  SwingType = models.CharField(default="take", blank=True)
   Contact = models.BooleanField(default=False, blank=True)
-  BallInPlay = models.BooleanField(default=False, blank=True)
+  PlayId = models.IntegerField(default=None, blank=True, null=True)
   BallInPlayType = models.CharField(max_length=100, null=True, blank=True, default=None)
-  Bases = models.PositiveIntegerField(default=None, null=True, blank=True)
-  Rbi = models.PositiveIntegerField(default=None, null=True, blank=True)
+
+class Play(models.Model):
+  PlayId = models.AutoField(primary_key=True)
+  GameId = models.PositiveIntegerField()
+  BatterId = models.IntegerField()
+  PitcherId = models.IntegerField()
+  TotalBases = models.IntegerField(validators=[MaxValueValidator(4)], blank=True, default=0)
+  PlayType = models.CharField(max_length=100)
+  BallInPlayType = models.CharField(max_length=100)
+  OutsRecorded = models.IntegerField(validators=[MaxValueValidator(3)], blank=True, default=0)
+  Runs = models.IntegerField(validators=[MaxValueValidator(4)], blank=True, default=0)
+  EarnedRuns = models.IntegerField(validators=[MaxValueValidator(4)], blank=True, default=0)
+  PlayersScored = ArrayField(base_field=models.IntegerField())
+  Errors = models.JSONField()
 
 class Game(models.Model):
   GameId = models.AutoField(primary_key=True)

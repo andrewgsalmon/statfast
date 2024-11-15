@@ -12,5 +12,6 @@ urlpatterns = [
     path('players', views.PlayerApi, name='players'),
     path('players/<int:id>', views.PlayerApi, name='player_detail'),
     path('pitches', views.PitchApi, name='pitches'),
-    path('games', views.GameApi, name='games')
+    path('games', views.GameApi, name='games'),
+    path('plays', views.PlayApi, name='plays')
 ]
