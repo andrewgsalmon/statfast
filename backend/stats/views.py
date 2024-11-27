@@ -1,162 +1,228 @@
-from django.shortcuts import render
+from rest_framework import generics, status
+from rest_framework.response import Response
+
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
-from django.http.response import JsonResponse
 
-from stats.models import League, Team, Player, Position, Pitch, Play, Game
-from stats.serializers import LeagueSerializer, TeamSerializer, PlayerSerializer, PositionSerializer, PitchSerializer, PlaySerializer, GameSerializer
+from stats.models import League, Team, Player, Pitch, Play, Game
+from stats.serializers import LeagueSerializer, TeamSerializer, PlayerSerializer, PitchSerializer, PlaySerializer, GameSerializer
 
-# Create your views here.
 def index(request):
-  return HttpResponse("Welcome to the Statfast API!")
+  return HttpResponse("Welcome to the StatFast API!")
 
-@csrf_exempt
-def LeagueApi(request,id=0):
-  if request.method=='GET':
-    league = League.objects.all()
-    league_serializer=LeagueSerializer(league,many=True)
-    return JsonResponse(league_serializer.data, safe=False)
-  elif request.method=='POST':
-    league_data=JSONParser().parse(request)
-    league_serializer=LeagueSerializer(data=league_data)
-    if league_serializer.is_valid():
-      league_serializer.save()
-      return JsonResponse("Added League successfully",safe=False)
-    return JsonResponse("Failed to add league",safe=False)
-  elif request.method=='PUT':
-    league_data=JSONParser().parse(request)
-    league=League.objects.get(LeagueId=league_data['LeagueId'])
-    league_serializer=LeagueSerializer(league,data=league_data)
-    if league_serializer.is_valid():
-      league_serializer.save()
-      return JsonResponse("Update Successful", safe=False)
-    return JsonResponse("Failed to update")
-  elif request.method=='DELETE':
-    league=League.objects.get(LeagueId=id)
-    league.delete()
-    return JsonResponse("Deleted successfully",safe=False)
+class LeagueListView(generics.ListCreateAPIView):
+  queryset = League.objects.all()
+  serializer_class = LeagueSerializer
 
-@csrf_exempt
-def TeamApi(request,id=0):
-  if request.method=='GET':
-    team_id = request.GET.get('team_id', None)
-    if team_id:
-      team = Team.objects.filter(TeamId=team_id)
-    else:
-      team = Team.objects.all()
-    team_serializer=TeamSerializer(team,many=True)
-    return JsonResponse(team_serializer.data, safe=False)
-  elif request.method=='POST':
-    team_data=JSONParser().parse(request)
-    team_serializer=TeamSerializer(data=team_data)
-    if team_serializer.is_valid():
-      team_serializer.save()
-      return JsonResponse("Added Team successfully",safe=False)
-    return JsonResponse("Failed to add team",safe=False)
-  elif request.method=='PUT':
-    team_data=JSONParser().parse(request)
-    team=Team.objects.get(TeamId=team_data['TeamId'])
-    team_serializer=TeamSerializer(team,data=team_data)
-    if team_serializer.is_valid():
-      team_serializer.save()
-      return JsonResponse("Update Successful", safe=False)
-    return JsonResponse("Failed to update team", safe=False)
-  elif request.method=='DELETE':
-    team=Team.objects.get(TeamId=id)
-    team.delete()
-    return JsonResponse("Deleted team successfully",safe=False)
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+    response.data = {
+      "message": f'Created league successfully: {response.data.get('LeagueName')}'
+    }
+    return response
 
-@csrf_exempt
-def PlayerApi(request,id=0):
-  if request.method=='GET':
-    team_id = request.GET.get('team_id', None)
-    if team_id:
-      players = Player.objects.filter(Team=team_id)
-    else:
-      players = Player.objects.all()
-    player_serializer = PlayerSerializer(players, many=True)
-    return JsonResponse(player_serializer.data, safe=False)
-  elif request.method=='POST':
-    player_data=JSONParser().parse(request)
-    player_serializer=PlayerSerializer(data=player_data)
-    if player_serializer.is_valid():
-      player_serializer.save()
-      return JsonResponse("Added Player successfully",safe=False)
-    return JsonResponse("Failed to add player",safe=False)
-  elif request.method=='PUT':
-    player_data=JSONParser().parse(request)
-    player=Player.objects.get(PlayerId=player_data['PlayerId'])
-    player_serializer=PlayerSerializer(player,data=player_data)
-    if player_serializer.is_valid():
-      player_serializer.save()
-      return JsonResponse("Update Successful", safe=False)
-    return JsonResponse("Failed to update player", safe=False)
-  elif request.method=='DELETE':
-    player=Player.objects.get(PlayerId=id)
-    player.delete()
-    return JsonResponse("Deleted player successfully",safe=False)
+class LeagueDetailView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = League.objects.all()
+  serializer_class = LeagueSerializer
 
-@csrf_exempt
-def PitchApi(request,id=0):
-  if request.method=='GET':
-    pitch_id = request.GET.get('pitch_id', None)
-    if pitch_id:
-      pitches = Pitch.objects.filter(PitchId=pitch_id)
-    else:
-      pitches = Pitch.objects.all()
-    pitch_serializer = PitchSerializer(pitches, many=True)
-    return JsonResponse(pitch_serializer.data, safe=False)
-  elif request.method=='POST':
-    pitch_data=JSONParser().parse(request)
-    pitch_serializer=PitchSerializer(data=pitch_data)
-    if pitch_serializer.is_valid():
-      pitch_serializer.save()
-      return JsonResponse("Added Pitch successfully",safe=False)
-    return JsonResponse("Failed to add pitch",safe=False)
-
-@csrf_exempt
-def GameApi(request,id=0):
-  if request.method=='GET':
-    game_id = request.GET.get('game_id', None)
-    if game_id:
-      games = Game.objects.filter(GameId=game_id)
-    else:
-      games = Game.objects.all()
-    game_serializer = GameSerializer(games, many=True)
-    return JsonResponse(game_serializer.data, safe=False)
-  elif request.method=='POST':
-    game_data=JSONParser().parse(request)
-    game_serializer=GameSerializer(data=game_data)
-    if game_serializer.is_valid():
-      game_serializer.save()
-      return JsonResponse("Created Game successfully",safe=False)
-    return JsonResponse("Failed to add game",safe=False)
-
-@csrf_exempt
-def PlayApi(request,id=0, game_id=None):
-  if request.method=='GET':
-    play_id = request.GET.get('play_id', None)
-    if play_id:
-      plays = Play.objects.filter(PlayId=play_id)
-    elif game_id:
-      plays = Play.objects.filter(GameId=game_id)
-    else:
-      plays = Play.objects.all()
-    play_serializer = PlaySerializer(plays, many=True)
-    return JsonResponse(play_serializer.data, safe=False)
-  elif request.method=='POST':
-    play_data=JSONParser().parse(request)
-    play_serializer=PlaySerializer(data=play_data)
-    if play_serializer.is_valid():
-      play = play_serializer.save()
-      response_data = {
-        "message": "Created play successfully",
-        "playId": play.PlayId
+  def update(self, request, *args, **kwargs):
+    partial = kwargs.pop('partial', False)
+    instance = self.get_object()
+    serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    if serializer.is_valid():
+      serializer.save()
+      league_name = serializer.data.get('LeagueName')
+      custom_response = {
+        "message": f"League name updated successfully to {league_name}."
       }
-      return JsonResponse(response_data ,safe=False)
-    return JsonResponse("Failed to add play",safe=False)
-  elif request.method=='DELETE':
-    play=Play.objects.get(PlayId=id)
-    play.delete()
-    return JsonResponse("Deleted successfully",safe=False)
+      return Response(custom_response, status=status.HTTP_200_OK)
+    return Response({"message": "Failed to update league.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+  def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    league_name = instance.LeagueName
+    instance.delete()
+    return Response({"message": f"{league_name} deleted successfully."}, status=status.HTTP_202_ACCEPTED)
+
+class TeamListCreateView(generics.ListCreateAPIView):
+  queryset = Team.objects.all()
+  serializer_class = TeamSerializer
+
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+    response.data = {
+      "message": f"Created team successfully: {response.data.get('TeamName')}"
+    }
+    return response
+
+class TeamDetailView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Team.objects.all()
+  serializer_class = TeamSerializer
+
+  def update(self, request, *args, **kwargs):
+    partial = kwargs.pop('partial', False)
+    instance = self.get_object()
+    serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    if serializer.is_valid():
+      serializer.save()
+      team_name = serializer.data.get('TeamName')
+      custom_response = {
+        "message": f"{team_name} updated successfully.",
+        "data": serializer.data
+      }
+      return Response(custom_response, status=status.HTTP_200_OK)
+    return Response({"message": "Failed to update team.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+  def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    team_name = instance.TeamName
+    instance.delete()
+    return Response({"message": f"{team_name} deleted successfully."}, status=status.HTTP_202_ACCEPTED)
+
+class PlayerListCreateView(generics.ListCreateAPIView):
+  queryset = Player.objects.all()
+  serializer_class = PlayerSerializer
+
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+    response.data = {
+      "message": f"Added {response.data.get('FirstName')} {response.data.get('LastName')} successfully"
+    }
+    return response
+
+class PlayerDetailView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Player.objects.all()
+  serializer_class = PlayerSerializer
+
+  def update(self, request, *args, **kwargs):
+    partial = kwargs.pop('partial', False)
+    instance = self.get_object()
+    serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    if serializer.is_valid():
+      serializer.save()
+      player_name = f"{serializer.data.get('FirstName')} {serializer.data.get('LastName')}"
+      custom_response = {
+        "message": f"{player_name} updated successfully.",
+        "data": serializer.data
+      }
+      return Response(custom_response, status=status.HTTP_200_OK)
+    return Response({"message": "Failed to update player.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+  def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    player_name = instance.PlayerName
+    instance.delete()
+    return Response({"message": f"{player_name} deleted successfully."}, status=status.HTTP_202_ACCEPTED)
+
+class PitchListCreateView(generics.ListCreateAPIView):
+  queryset = Pitch.objects.all()
+  serializer_class = PitchSerializer
+
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+    response.data = {
+      "message": "Created pitch successfully"
+    }
+    return response
+
+class PitchDetailView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Pitch.objects.all()
+  serializer_class = PitchSerializer
+
+  def update(self, request, *args, **kwargs):
+    partial = kwargs.pop('partial', False)
+    instance = self.get_object()
+    serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    if serializer.is_valid():
+      serializer.save()
+      custom_response = {
+        "message": "Pitch updated successfully.",
+        "data": serializer.data
+      }
+      return Response(custom_response, status=status.HTTP_200_OK)
+    return Response({"message": "Failed to update pitch.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+  def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    player_name = instance.PlayerName
+    instance.delete()
+    return Response({"message": f"{player_name} deleted successfully."}, status=status.HTTP_202_ACCEPTED)
+
+class GamePitchesListView(generics.ListAPIView):
+  serializer_class = PitchSerializer
+
+  def get_queryset(self):
+    game_id = self.kwargs.get('game_id')
+    return Pitch.objects.filter(GameId=game_id)
+
+class GameListCreateView(generics.ListCreateAPIView):
+  queryset = Game.objects.all()
+  serializer_class = GameSerializer
+
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+    response.data = {
+      "message": "Created new game successfully"
+    }
+    return response
+
+class GameDetailView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Game.objects.all()
+  serializer_class = GameSerializer
+
+  def update(self, request, *args, **kwargs):
+    partial = kwargs.pop('partial', False)
+    instance = self.get_object()
+    serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    if serializer.is_valid():
+      serializer.save()
+      custom_response = {
+        "message": "Game updated successfully.",
+        "data": serializer.data
+      }
+      return Response(custom_response, status=status.HTTP_200_OK)
+    return Response({"message": "Failed to update game.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+  def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    instance.delete()
+    return Response({"message": "Game deleted successfully."}, status=status.HTTP_202_ACCEPTED)
+
+class PlayListCreateView(generics.ListCreateAPIView):
+  queryset = Play.objects.all()
+  serializer_class = PlaySerializer
+
+  def create(self, request, *args, **kwargs):
+    response = super().create(request, *args, **kwargs)
+    response.data = {
+      "message": "Created new play successfully"
+    }
+    return response
+
+class PlayDetailView(generics.RetrieveUpdateDestroyAPIView):
+  queryset = Play.objects.all()
+  serializer_class = PlaySerializer
+
+  def update(self, request, *args, **kwargs):
+    partial = kwargs.pop('partial', False)
+    instance = self.get_object()
+    serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    if serializer.is_valid():
+      serializer.save()
+      custom_response = {
+        "message": "Updated play successfully.",
+        "data": serializer.data
+      }
+      return Response(custom_response, status=status.HTTP_200_OK)
+    return Response({"message": "Failed to update play.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+  def destroy(self, request, *args, **kwargs):
+    instance = self.get_object()
+    instance.delete()
+    return Response({"message": "Play deleted successfully."}, status=status.HTTP_202_ACCEPTED)
+
+class GamePlaysListView(generics.ListAPIView):
+  serializer_class = PlaySerializer
+
+  def get_queryset(self):
+    game_id = self.kwargs.get('game_id')
+    return Play.objects.filter(GameId=game_id)

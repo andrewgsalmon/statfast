@@ -1,11 +1,11 @@
 [
-  {"model": "stats.position", "pk": 1, "fields": {"name": "Pitcher", "position_number": 1}},
-  {"model": "stats.position", "pk": 2, "fields": {"name": "Catcher", "position_number": 2}},
-  {"model": "stats.position", "pk": 3, "fields": {"name": "1st Base", "position_number": 3}},
-  {"model": "stats.position", "pk": 4, "fields": {"name": "2nd Base", "position_number": 4}},
-  {"model": "stats.position", "pk": 5, "fields": {"name": "3rd Base", "position_number": 5}},
-  {"model": "stats.position", "pk": 6, "fields": {"name": "Shortstop", "position_number": 6}},
-  {"model": "stats.position", "pk": 7, "fields": {"name": "Left Field", "position_number": 7}},
-  {"model": "stats.position", "pk": 8, "fields": {"name": "Center Field", "position_number": 8}},
-  {"model": "stats.position", "pk": 9, "fields": {"name": "Right Field", "position_number": 9}}
+  {"model": "stats.position", "pk": 1, "fields": {"name": "Pitcher", "abbrev": "P", "position_number": 1}},
+  {"model": "stats.position", "pk": 2, "fields": {"name": "Catcher", "abbrev": "C", "position_number": 2}},
+  {"model": "stats.position", "pk": 3, "fields": {"name": "1st Base", "abbrev": "1B", "position_number": 3}},
+  {"model": "stats.position", "pk": 4, "fields": {"name": "2nd Base", "abbrev": "2B", "position_number": 4}},
+  {"model": "stats.position", "pk": 5, "fields": {"name": "3rd Base", "abbrev": "3B", "position_number": 5}},
+  {"model": "stats.position", "pk": 6, "fields": {"name": "Shortstop", "abbrev": "SS", "position_number": 6}},
+  {"model": "stats.position", "pk": 7, "fields": {"name": "Left Field", "abbrev": "LF", "position_number": 7}},
+  {"model": "stats.position", "pk": 8, "fields": {"name": "Center Field", "abbrev": "CF", "position_number": 8}},
+  {"model": "stats.position", "pk": 9, "fields": {"name": "Right Field", "abbrev": "RF", "position_number": 9}}
 ]

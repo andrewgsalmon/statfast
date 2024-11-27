@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -21,6 +21,7 @@ def __str__(self):
 
 class Position(models.Model):
   name = models.CharField(max_length=100)
+  abbrev = models.CharField(max_length=2)
   position_number = models.PositiveIntegerField(unique=True)
 
   def __str__(self):
@@ -32,7 +33,7 @@ class Player(models.Model):
   LastName = models.CharField(max_length=500)
   JerseyNumber = models.PositiveIntegerField(validators=[MaxValueValidator(100)])
   Team = models.PositiveIntegerField()
-  Positions = models.ManyToManyField(Position)
+  Positions = ArrayField(base_field=models.PositiveIntegerField(validators=[MaxValueValidator(10)]), null=True, default=None, blank=True)
   Bats = models.CharField(max_length=1)
   Throws = models.CharField(max_length=1)
 
@@ -81,4 +82,5 @@ class Game(models.Model):
   Date = models.DateField()
   VisitingTeamId = models.PositiveIntegerField()
   HomeTeamId = models.PositiveIntegerField()
+  WinningTeamId = models.PositiveBigIntegerField()
   LeagueId = models.PositiveIntegerField()
