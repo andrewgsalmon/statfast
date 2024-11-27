@@ -14,7 +14,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class PositionSerializer(serializers.ModelSerializer):
   class Meta:
     model=Position
-    fields=('name', 'position_number')
+    fields=('name', 'position_number', 'abbrev')
 
 class PlayerSerializer(serializers.ModelSerializer):
   class Meta:
@@ -29,7 +29,7 @@ class PitchSerializer(serializers.ModelSerializer):
 class GameSerializer(serializers.ModelSerializer):
   class Meta:
     model=Game
-    fields=('GameId', 'Date', 'VisitingTeamId', 'HomeTeamId', 'LeagueId')
+    fields=('GameId', 'Date', 'VisitingTeamId', 'HomeTeamId', 'WinningTeamId', 'LeagueId')
 
 class PlaySerializer(serializers.ModelSerializer):
   class Meta:
