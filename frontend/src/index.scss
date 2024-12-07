@@ -1,0 +1,8 @@
+@use './styles/variables' as *;
+@use './styles/typography' as *;
+@use './styles/mixins' as *;
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

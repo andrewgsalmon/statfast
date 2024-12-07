@@ -1,0 +1,13 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+@use "../../styles/typography" as *;
+@use "../../App.scss" as *;
+
+.league {
+  &__form {
+    width: 10rem;
+    margin: auto;
+    display: flex;
+    flex-flow: column;
+  }
+}
