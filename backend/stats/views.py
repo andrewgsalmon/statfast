@@ -187,6 +187,13 @@ class GameDetailView(generics.RetrieveUpdateDestroyAPIView):
     instance.delete()
     return Response({"message": "Game deleted successfully."}, status=status.HTTP_202_ACCEPTED)
 
+class LeagueGamesListView(generics.ListAPIView):
+  serializer_class = GameSerializer
+
+  def get_queryset(self):
+    league_id = self.kwargs.get('league_id')
+    return Game.objects.filter(LeagueId=league_id)
+
 class PlayListCreateView(generics.ListCreateAPIView):
   queryset = Play.objects.all()
   serializer_class = PlaySerializer

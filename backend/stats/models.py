@@ -14,6 +14,7 @@ class League(models.Model):
 class Team(models.Model):
   TeamId = models.AutoField(primary_key=True)
   TeamName = models.CharField(max_length=500)
+  HomeField = models.CharField(max_length=500)
   League = models.PositiveIntegerField()
 
 def __str__(self):
@@ -79,7 +80,7 @@ class Play(models.Model):
 
 class Game(models.Model):
   GameId = models.AutoField(primary_key=True)
-  Date = models.DateField()
+  Date = models.DateTimeField()
   VisitingTeamId = models.PositiveIntegerField()
   HomeTeamId = models.PositiveIntegerField()
   WinningTeamId = models.PositiveBigIntegerField()
