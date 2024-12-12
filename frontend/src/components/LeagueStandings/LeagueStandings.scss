@@ -1,0 +1,23 @@
+table {
+  border-collapse: collapse;
+  background-color: white;
+  margin: 0 auto 1rem;
+}
+
+th {
+  background-color: lightgray;
+}
+
+th, td {
+  padding: 0 1rem;
+  border: 1px solid black;
+}
+
+.table-data {
+  text-align: center;
+}
+
+.team-column {
+  text-align: left;
+  padding-left: 0.5rem;
+}

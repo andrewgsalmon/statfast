@@ -1,0 +1,27 @@
+.sx-react-calendar-wrapper {
+  max-width: 90vw;
+  max-height: 90vh;
+  margin: auto;
+}
+
+.sx__month-agenda {
+  &-day {
+    &__event-icon {
+      background-color: royalblue!important;
+    }
+
+    &--active {
+      box-shadow: inset 0 0 0 3px royalblue!important;
+    }
+  }
+
+  &-event {
+    background-color: lightblue!important;
+    border-left: 4px solid darkblue!important;
+    color: black!important;
+
+    &__time {
+      color: black!important;
+    }
+  }
+}
